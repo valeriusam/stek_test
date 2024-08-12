@@ -30,7 +30,7 @@ export default {
       taskManager: new TaskManager(2),
       intervalId: null,
       taskStatus: {},
-      logs: [] // массив для хранения логов
+      logs: []
     };
   },
   methods: {
@@ -142,10 +142,10 @@ export default {
     this.taskStatus = this.taskManager.getStatus();
     const originalConsoleLog = console.log;
     console.log = (...args) => {
-      // сохраняем логи в массиве
+
       this.logs.push(args.join(' '));
 
-      // вызываем оригинальную функцию консоли
+
       originalConsoleLog.apply(console, args);
     };
   },

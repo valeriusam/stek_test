@@ -63,17 +63,16 @@ export default class TaskManager {
     //         this.tasks = this.tasks.filter(task => task.id !== taskInfo.id);
     //         this.activeTasks++;
     //
-    //         // Запускаем задачу и сохраняем промис в массив
+    //
     //         const taskPromise = this.executeTask(taskInfo).then(() => {
     //             this.activeTasks--;
-    //             // Запускаем следующую задачу, если есть доступные слоты
+    //
     //             return this.executeTasks();
     //         });
     //
     //         tasksExecutionPromises.push(taskPromise);
     //     }
     //
-    //     // Ожидаем завершения всех задач
     //     await Promise.all(tasksExecutionPromises);
     // }
 
@@ -168,17 +167,11 @@ export default class TaskManager {
             const taskExecution = this.executeTask(taskInfo);
             taskExecution.finally(() => {
                 this.activeTasks--;
-                this.executeTasks(); // Continue executing remaining tasks
+                this.executeTasks();
             });
-
-            // Await each task in sequence for better control and to prevent premature "completed" message
             await taskExecution;
         }
     }
-
-
-
-
     cancelTask(taskId) {
         const cancelRecursively = (id) => {
             if (this.taskStatus[id] === 'pending' || this.taskStatus[id] === 'running') {
