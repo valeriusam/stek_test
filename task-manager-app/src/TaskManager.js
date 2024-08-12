@@ -101,58 +101,6 @@ export default class TaskManager {
         }
     }
 
-    // async executeTasks() {
-    //     if (this.activeTasks >= this.maxConcurrentTasks) return;
-    //
-    //     this.tasks.sort((a, b) => b.priority - a.priority);
-    //
-    //     const tasksExecutionPromises = [];
-    //
-    //     while (this.activeTasks < this.maxConcurrentTasks && this.tasks.length) {
-    //         const taskInfo = this.tasks.find(taskInfo =>
-    //             taskInfo.dependencies.every(dep => this.taskStatus[dep] === 'completed')
-    //         );
-    //
-    //         if (!taskInfo) break;
-    //
-    //         this.tasks = this.tasks.filter(task => task.id !== taskInfo.id);
-    //         this.activeTasks++;
-    //
-    //         const taskPromise = this.executeTask(taskInfo).then(() => {
-    //             this.activeTasks--;
-    //             return this.executeTasks();
-    //         });
-    //
-    //         tasksExecutionPromises.push(taskPromise);
-    //     }
-    //
-    //     await Promise.all(tasksExecutionPromises);
-    // }
-
-    // async executeTasks() {
-    //     if (this.activeTasks >= this.maxConcurrentTasks) return;
-    //
-    //     this.tasks.sort((a, b) => b.priority - a.priority);
-    //
-    //     while (this.activeTasks < this.maxConcurrentTasks && this.tasks.length) {
-    //         const taskInfo = this.tasks.find(taskInfo =>
-    //             taskInfo.dependencies.every(dep => this.taskStatus[dep] === 'completed')
-    //         );
-    //
-    //         if (!taskInfo) break;
-    //
-    //         this.tasks = this.tasks.filter(task => task.id !== taskInfo.id);
-    //         this.activeTasks++;
-    //
-    //         try {
-    //             await this.executeTask(taskInfo);
-    //         } finally {
-    //             this.activeTasks--;
-    //             this.executeTasks(); // Запуск следующей задачи после завершения текущей
-    //         }
-    //     }
-    // }
-
 
     async executeTasks() {
         while (this.activeTasks < this.maxConcurrentTasks && this.tasks.length) {
@@ -168,16 +116,12 @@ export default class TaskManager {
             const taskExecution = this.executeTask(taskInfo);
             taskExecution.finally(() => {
                 this.activeTasks--;
-                this.executeTasks(); // Continue executing remaining tasks
+                this.executeTasks();
             });
 
-            // Await each task in sequence for better control and to prevent premature "completed" message
             await taskExecution;
         }
     }
-
-
-
 
     cancelTask(taskId) {
         const cancelRecursively = (id) => {
