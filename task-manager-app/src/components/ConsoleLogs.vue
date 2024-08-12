@@ -17,7 +17,7 @@
 export default {
   data() {
     return {
-      logs: []
+      logs: [] // массив для хранения логов
     };
   },
   mounted() {
